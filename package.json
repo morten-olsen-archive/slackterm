@@ -1,0 +1,38 @@
+{
+  "name": "slack",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "bin": {
+    "slackterm": "./dist/bin.js"
+  },
+  "scripts": {
+    "dev": "ts-node-dev src/bin.ts",
+    "start": "ts-node src/bin.ts"
+  },
+  "devDependencies": {
+    "@types/blessed": "^0.1.10",
+    "@types/chalk": "^2.2.0",
+    "@types/commander": "^2.12.2",
+    "@types/dotenv": "^6.1.0",
+    "@types/eventemitter3": "^2.0.2",
+    "@types/remote-redux-devtools": "^0.5.3",
+    "@types/string-argv": "^0.1.0",
+    "@types/strip-ansi": "^3.0.0",
+    "ts-node": "^8.0.2",
+    "ts-node-dev": "^1.0.0-pre.32",
+    "typescript": "^3.3.1"
+  },
+  "dependencies": {
+    "@slack/client": "^4.8.0",
+    "blessed": "^0.1.81",
+    "chalk": "^2.4.2",
+    "commander": "^2.19.0",
+    "dotenv": "^6.2.0",
+    "eventemitter3": "^3.1.0",
+    "redux": "^4.0.1",
+    "remote-redux-devtools": "^0.5.16",
+    "string-argv": "^0.1.1",
+    "strip-ansi": "^5.0.0"
+  }
+}
