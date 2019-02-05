@@ -112,6 +112,7 @@ class UI extends EventEmitter {
       output += text;
       this.output.addItem(output)
     });
+    this.output.setScrollPerc(100);
     this.status.content = `channel: ${currentChannel || '[none]'}`
     this.screen.render();
   }
