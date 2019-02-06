@@ -1,13 +1,18 @@
 import { Store } from 'redux';
 import blessed, { Widgets } from 'blessed';
 import EventEmitter from 'eventemitter3';
-import strip from 'strip-ansi';
 import { State, selectors } from '../state';
+import CreateNode from './CreateNode';
+import output from './elements/output';
+
+const createNodes: CreateNode[] = [
+  output,
+]
 
 class UI extends EventEmitter {
   private screen: Widgets.Screen;
-  private output: Widgets.ListElement;
   private status: Widgets.BoxElement;
+
 
   constructor(store: Store<State>) {
     super();
@@ -17,25 +22,6 @@ class UI extends EventEmitter {
       title: 'react-blessed hello world',
     });
     this.screen.enableMouse();
-  
-    store.subscribe(() => {
-      const state = store.getState();
-      this.update(state);
-    });
-
-    this.output = blessed.list({
-      bottom: 2,
-      mouse: true,
-      vi: true,
-      keys: true,
-      interactive: true,
-      style: {
-        selected: {
-          bg: 'yello',
-          fg: 'green',
-        }
-      }
-    });
 
     const form = blessed.form({
       name: 'form',
@@ -82,7 +68,6 @@ class UI extends EventEmitter {
       return process.exit(0);
     });
     
-    this.screen.append(this.output);
     this.screen.append(form);
     this.screen.append(this.status);
     form.append(input);
@@ -90,29 +75,20 @@ class UI extends EventEmitter {
     this.update(store.getState());
 
     input.focus();
+
+    createNodes.forEach(createNode => {
+      const node = createNode(store);
+      this.screen.append(node);
+    });
+  
+    store.subscribe(() => {
+      const state = store.getState();
+      this.update(state);
+    });
   }
 
   update(state: State) {
     const currentChannel = selectors.slack.getCurrentChannelName(state);
-    this.output.clearItems();
-    const padding = state.output.lines.reduce((output, current) => {
-      const prefix = current[1];
-      if (!prefix) {
-        return output;
-      }
-      return Math.max(output, strip(prefix).length);
-    }, 0);
-    state.output.lines.forEach(([text, prefix]) => {
-      let output = '';
-      const p = prefix;
-      if (p) {
-        const ansiLength = p.length - strip(p).length;
-        output += `> ${p.padEnd(padding + ansiLength, ' ')} : `;
-      }
-      output += text;
-      this.output.addItem(output)
-    });
-    this.output.setScrollPerc(100);
     this.status.content = `channel: ${currentChannel || '[none]'}`
     this.screen.render();
   }
