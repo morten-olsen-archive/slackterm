@@ -17,6 +17,7 @@ const slackMiddleware = (options: Options): Middleware => () => (next) => {
   rtm.start();
 
   rtm.on('message', (message) => {
+    process.stdout.write('\u0007');
     next({
       type: actionTypes.ADD_MESSAGE,
       payload: message,
