@@ -19,6 +19,11 @@ class Feed {
           ...state,
           input: state.input.slice(0, -1), 
         };
+      case 'RESET':
+        return { 
+          ...state,
+          input: '',
+        };
       case 'MOVE_CURSOR':
         return {
           ...state,
@@ -37,9 +42,9 @@ class Feed {
       offset: screen.offset,
     }).split('\n');
     if (screen.mode === 'i') {
-      lines[term.height -1] = `say in ${data.currentChannel.name}: ${screen.input}`;
+      lines[term.height] = `say in ${data.currentChannel.name}: ${screen.input}`;
     } else {
-      lines[term.height - 1] = 'normal mode';
+      lines[term.height] = 'normal mode';
     }
     return lines.join('\n');
   }
@@ -69,6 +74,9 @@ class Feed {
               channel: data.currentChannel.id,
               text: screen.input,
             },
+          });
+          dispatch({
+            type: 'RESET',
           });
           break;
         }

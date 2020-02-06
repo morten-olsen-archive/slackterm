@@ -2,7 +2,7 @@ const create = (input = '', width) => {
   const result = [];
   const lines = Math.ceil(input.length / width);
   for (let line = 0; line < lines; line++) {
-    result[line] = input.slice(line * width, line * width + width);
+    result[line] = input.slice(line * width, line * width + width).trim();
   }
   return result.join('\n');
 };

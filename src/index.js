@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const createStore = require('./store');
 const Feed = require('./screens/Feed');
 const SelectConversation = require('./screens/selectChannel');
@@ -17,7 +19,6 @@ const start = async () => {
     },
   });
 
-  store.dispatch({ type: 'foo' });
   terminal.on('key', (name) => {
     if (name === 'CTRL_D') {
       process.exit();
@@ -44,14 +45,26 @@ const start = async () => {
     });
   });
 
+  process.stdout.write('\u001B[2J\u001B[0;0f');
+  terminal.hideCursor();
   
   store.subscribe(() => {
-    //terminal.moveTo(0, 0);
     if (!store.getState().screen.debug) {
-      process.stdout.write('\u001B[2J\u001B[0;0f')
-      process.stdout.write(store.getState().screen.output);
+      const output = store.getState().screen.output.split('\n');
+      const previousOutput = store.getState().screen.previousOutput.split('\n');
+      //process.stdout.write(store.getState().screen.output);
+      for (let h = 0; h <= terminal.height; h++) {
+        if (previousOutput[h] === output[h]) continue;
+        terminal.moveTo(1, h + 1);
+        const emptyLine = ''.padEnd(terminal.width, ' ');
+        process.stdout.write(emptyLine);
+        terminal.moveTo(1, h + 1);
+        const line = (output[h] || '').padEnd(terminal.width, ' ');
+        process.stdout.write(line);
+      }
     }
   });
+  store.dispatch({ type: 'start' });
 
   
   terminal.grabInput(true);

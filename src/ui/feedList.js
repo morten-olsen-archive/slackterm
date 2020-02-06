@@ -4,7 +4,7 @@ const render = ({
   offset = 0,
   height,
   width,
-  seperator = ' : ',
+  seperator = ' ',
 }) =>  {
   const items = orgItems; //orgItems.reverse().slice(offset).reverse();
   const output = new Array(height);
@@ -19,7 +19,7 @@ const render = ({
       const index = currentLine - text.length + line;
       const prefixExtra = item.formattedPrefix.length - item.prefix.length;
       const prefix = line === 0
-        ? item.formattedPrefix.padEnd(prefixWidth + prefixExtra) + seperator
+        ? item.formattedPrefix.padEnd(prefixWidth + prefixExtra, ' ') + seperator
         : ''.padEnd(prefixWidth + seperator.length, ' ');
       output[index] = prefix + text[line];
     }

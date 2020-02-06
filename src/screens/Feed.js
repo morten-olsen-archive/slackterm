@@ -13,7 +13,7 @@ class Feed {
 
   handleInput = (input, dispatch, { data }) => {
     switch(input) {
-      case 'k':
+      case 's':
         dispatch({
           type: '@@SCREEN/SELECT',
           payload: 'selectConversation',

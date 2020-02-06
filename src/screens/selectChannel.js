@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 class SelectConversation {
   reducer = (state = { input: '',  selectedIndex: 0 }, {type, payload }) => {
     switch(type) {
@@ -16,6 +17,11 @@ class SelectConversation {
         return {
           ...state,
           input: state.input.slice(0, -1), 
+        };
+      case 'RESET':
+        return { 
+          ...state,
+          input: '',
         };
       default:
         return state;
@@ -40,15 +46,15 @@ class SelectConversation {
 
   render = ({ data, screen, term }) => {
     let items = this.getItems(data, screen.input);
-    items = items.slice(0, term.height - 3);
+    items = items.slice(0, term.height - 2);
     const output = items.map((item, index) => {
       if (index === screen.selectedIndex) {
-        return `>> ${item.name}`
+        return chalk.red(item.name);
       } else {
-        return `   ${item.name}`;
+        return item.name;
       }
     });
-    output[term.height - 1] = screen.input;
+    output[term.height] = 'search: ' + screen.input;
     return output.join('\n');
   }
 
@@ -79,6 +85,9 @@ class SelectConversation {
         dispatch({
           type: '@@SLACK/SELECT_CONVERSATION',
           payload: conversation,
+        });
+        dispatch({
+          type: 'RESET',
         });
         dispatch({
           type: '@@SCREEN/SELECT',

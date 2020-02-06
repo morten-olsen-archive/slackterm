@@ -3,6 +3,7 @@ const { combineReducers } = require('redux');
 const createScreenDefaults = (defaultView) => ({
   current: defaultView,
   output: '',
+  previousOutput: '',
   width: 80,
   height: 20,
   debug: false,
@@ -19,6 +20,7 @@ const screenReducer = (defaultView) => (state = createScreenDefaults(defaultView
       return {
         ...state,
         output: payload,
+        previousOutput: state.output,
       };
     case '@@SCREEN/RESIZE':
       return {
